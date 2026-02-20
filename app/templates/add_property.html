@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Add Property - EstateHub{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Add New Property</h2>
+        
+        <form method="POST" enctype="multipart/form-data" id="addPropertyForm" class="space-y-6">
+            <!-- Title -->
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Property Title <span class="text-red-500">*</span></label>
+                <input type="text" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            
+            <!-- Description -->
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Description <span class="text-red-500">*</span></label>
+                <textarea name="description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" required></textarea>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Property Type -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Property Type <span class="text-red-500">*</span></label>
+                    <select name="property_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" required>
+                        <option value="">Select Type</option>
+                        <option value="House">House</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Villa">Villa</option>
+                        <option value="Condo">Condo</option>
+                        <option value="Land">Land</option>
+                        <option value="Commercial">Commercial</option>
+                    </select>
+                </div>
+                
+                <!-- Price -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Price (USD) <span class="text-red-500">*</span></label>
+                    <input type="number" name="price" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" step="0.01" required>
+                </div>
+            </div>
+            
+            <!-- Address -->
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Street Address <span class="text-red-500">*</span></label>
+                <input type="text" name="address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- City -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">City <span class="text-red-500">*</span></label>
+                    <input type="text" name="city" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                
+                <!-- State -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">State/Province</label>
+                    <input type="text" name="state" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="Bagmati">
+                </div>
+                
+                <!-- Zipcode -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Zip Code</label>
+                    <input type="text" name="zipcode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Bedrooms -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Bedrooms</label>
+                    <input type="number" name="bedrooms" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" min="0">
+                </div>
+                
+                <!-- Bathrooms -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Bathrooms</label>
+                    <input type="number" name="bathrooms" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" min="0">
+                </div>
+                
+                <!-- Area -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Area (sq ft)</label>
+                    <input type="number" name="area" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" step="0.01" min="0">
+                </div>
+            </div>
+            
+            <!-- Image Upload -->
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Property Image</label>
+                <input type="file" name="image" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" accept="image/*" onchange="previewImage(this)">
+                <small class="text-gray-600 mt-1 block">Accepted formats: JPG, PNG, GIF, WebP (Max 16MB)</small>
+                <div id="imagePreview" class="mt-4"></div>
+            </div>
+            
+            <!-- Submit -->
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="bg-blue-600 text-white hover:bg-blue-700 transition px-6 py-2 rounded-lg font-semibold">
+                    <i class="fas fa-plus-circle me-2"></i> Add Property
+                </button>
+                <a href="{{ url_for('main.agent_dashboard') }}" class="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition px-6 py-2 rounded-lg font-semibold">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'max-w-full rounded-lg';
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}

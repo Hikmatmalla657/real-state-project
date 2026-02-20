@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}{{ property.title }} - EstateHub{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Left Column - Property Details -->
+        <div class="col-lg-8">
+            <!-- Property Image -->
+            <div class="property-image-container mb-4">
+                {% if property.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/' + property.image_filename) }}" 
+                         alt="{{ property.title }}" style="width: 100%; height: 500px; object-fit: cover; border-radius: 20px;">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200" 
+                         alt="Property" style="width: 100%; height: 500px; object-fit: cover; border-radius: 20px;">
+                {% endif %}
+            </div>
+            
+            <!-- Property Information Card -->
+            <div class="property-detail-container mb-4">
+                <div class="property-detail-content">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h2 class="mb-3">{{ property.title }}</h2>
+                            <p class="property-location mb-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ property.address }}, {{ property.city }}, {{ property.state or 'Nepal' }}
+                            </p>
+                        </div>
+                        <div class="property-price">${{ "{:,.0f}".format(property.price) }}</div>
+                    </div>
+                    
+                    <!-- Property Features Grid -->
+                    <div class="property-features-grid">
+                        <div class="feature-box">
+                            <i class="fas fa-bed"></i>
+                            <div class="feature-box-value">{{ property.bedrooms or 'N/A' }}</div>
+                            <div class="feature-box-label">Bedrooms</div>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-bath"></i>
+                            <div class="feature-box-value">{{ property.bathrooms or 'N/A' }}</div>
+                            <div class="feature-box-label">Bathrooms</div>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-ruler-combined"></i>
+                            <div class="feature-box-value">{{ property.area or 'N/A' }}</div>
+                            <div class="feature-box-label">Sq Ft</div>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-home"></i>
+                            <div class="feature-box-value">{{ property.property_type }}</div>
+                            <div class="feature-box-label">Type</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Description Section -->
+                    <div class="mt-4 pt-4" style="border-top: 2px solid #e0e0e0;">
+                        <h4 class="mb-3">Property Description</h4>
+                        <p style="color: #666; line-height: 1.8;">{{ property.description }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Similar Properties Section -->
+            {% if similar_properties %}
+            <div class="property-detail-container">
+                <div class="property-detail-content">
+                    <h4 class="mb-4">Similar Properties</h4>
+                    <div class="row g-3">
+                        {% for sim_prop in similar_properties %}
+                        <div class="col-md-4">
+                            <div class="similar-property-card">
+                                <img src="{% if sim_prop.image_filename %}{{ url_for('static', filename='uploads/' + sim_prop.image_filename) }}{% else %}https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400{% endif %}" 
+                                     alt="{{ sim_prop.title }}" style="width: 100%; height: 150px; object-fit: cover;">
+                                <div class="similar-property-content">
+                                    <h6 class="mb-2">{{ sim_prop.title }}</h6>
+                                    <div class="property-price mb-2">${{ "{:,.0f}".format(sim_prop.price) }}</div>
+                                    <a href="{{ url_for('main.property_detail', property_id=sim_prop.id) }}" 
+                                       class="btn btn-primary-custom w-100" style="font-size: 0.9rem; padding: 0.5rem;">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Right Column - Agent & Inquiry -->
+        <div class="col-lg-4">
+            <!-- Agent Information Card -->
+            <div class="agent-card mb-4">
+                <h5 class="mb-3">Listed By</h5>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="agent-avatar me-3">
+                        {{ property.agent.username[0].upper() }}
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ property.agent.full_name or property.agent.username }}</h6>
+                        <small style="color: #666;">Real Estate Agent</small>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3" style="border-top: 1px solid #e0e0e0;">
+                    {% if property.agent.phone %}
+                    <p class="mb-2" style="color: #666;">
+                        <i class="fas fa-phone" style="color: var(--primary); width: 20px;"></i>
+                        {{ property.agent.phone }}
+                    </p>
+                    {% endif %}
+                    <p class="mb-0" style="color: #666;">
+                        <i class="fas fa-envelope" style="color: var(--primary); width: 20px;"></i>
+                        {{ property.agent.email }}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Inquiry Form Card -->
+            {% if current_user.is_authenticated and current_user.role == 'user' %}
+            <div class="inquiry-card">
+                <h5 class="mb-3">Interested? Send Inquiry</h5>
+                <form method="POST" action="{{ url_for('main.submit_inquiry', property_id=property.id) }}">
+                    <div class="mb-3">
+                        <label class="form-label">Your Message</label>
+                        <textarea name="message" rows="4" class="form-control" required 
+                                  placeholder="I'm interested in this property. Could you please provide more details?"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact Phone</label>
+                        <input type="tel" name="contact_phone" class="form-control"
+                               value="{{ current_user.phone or '' }}" placeholder="+977 XXX-XXX-XXXX">
+                    </div>
+                    <button type="submit" class="btn-submit-inquiry">
+                        <i class="fas fa-paper-plane"></i> Send Inquiry
+                    </button>
+                </form>
+            </div>
+            {% elif not current_user.is_authenticated %}
+            <div class="inquiry-card text-center">
+                <i class="fas fa-user-lock" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                <h6 class="mb-2">Interested in this property?</h6>
+                <p class="mb-3" style="color: #666; font-size: 0.95rem;">Login to send an inquiry to the agent and save this property to your favorites.</p>
+                <a href="{{ url_for('main.login') }}" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login to Continue
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

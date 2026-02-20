@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard - EstateHub{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="section-title">My Dashboard</h2>
+    <p class="section-subtitle">Welcome back, {{ current_user.full_name or current_user.username }}!</p>
+    
+    <!-- Statistics -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="stat-card stat-card-1">
+                <div class="stat-card-icon"><i class="fas fa-heart"></i></div>
+                <div class="stat-card-number">{{ favorites|length }}</div>
+                <div class="stat-card-label">Favorite Properties</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stat-card stat-card-2">
+                <div class="stat-card-icon"><i class="fas fa-envelope"></i></div>
+                <div class="stat-card-number">{{ inquiries|length }}</div>
+                <div class="stat-card-label">Inquiries Sent</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Favorite Properties -->
+    <div class="mb-5">
+        <h4 class="mb-4"><i class="fas fa-heart me-2" style="color: var(--accent);"></i> My Favorite Properties</h4>
+        <div class="row g-4">
+            {% if favorites %}
+                {% for property in favorites %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="property-card">
+                        <div class="property-image">
+                            {% if property.image_filename %}
+                                <img src="{{ url_for('static', filename='uploads/' + property.image_filename) }}" alt="{{ property.title }}">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800" alt="Property">
+                            {% endif %}
+                            <div class="property-badge">{{ property.property_type }}</div>
+                            <div class="property-favorite active" onclick="toggleFavorite({{ property.id }}, this)">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                        <div class="property-body">
+                            <div class="property-price">${{ "{:,.0f}".format(property.price) }}</div>
+                            <h3 class="property-title">{{ property.title }}</h3>
+                            <p class="property-location">
+                                <i class="fas fa-map-marker-alt"></i> {{ property.city }}
+                            </p>
+                            <div class="property-features mb-3">
+                                <div class="feature-item">
+                                    <i class="fas fa-bed"></i> {{ property.bedrooms }}
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-bath"></i> {{ property.bathrooms }}
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-ruler-combined"></i> {{ property.area }} sqft
+                                </div>
+                            </div>
+                            <a href="{{ url_for('main.property_detail', property_id=property.id) }}" 
+                               class="btn btn-view-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="dashboard-card text-center py-5">
+                        <i class="fas fa-heart" style="font-size: 4rem; color: #ddd; margin-bottom: 1rem;"></i>
+                        <h5>No favorites yet</h5>
+                        <p style="color: #666;">Start browsing properties and save your favorites!</p>
+                        <a href="{{ url_for('main.properties') }}" class="btn btn-primary-custom mt-3">Browse Properties</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- My Inquiries -->
+    <div>
+        <h4 class="mb-4"><i class="fas fa-envelope me-2" style="color: var(--success);"></i> My Inquiries</h4>
+        {% if inquiries %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inquiry in inquiries %}
+                    <tr>
+                        <td>
+                            <strong>{{ inquiry.property.title }}</strong><br>
+                            <small style="color: #666;">${{ "{:,.0f}".format(inquiry.property.price) }}</small>
+                        </td>
+                        <td>{{ inquiry.message[:50] }}{% if inquiry.message|length > 50 %}...{% endif %}</td>
+                        <td>
+                            <span class="badge-status badge-{{ 'pending' if inquiry.status == 'pending' else 'available' }}">
+                                {{ inquiry.status.title() }}
+                            </span>
+                        </td>
+                        <td>{{ inquiry.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('main.property_detail', property_id=inquiry.property_id) }}" 
+                               class="btn btn-sm btn-primary-custom">View Property</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="dashboard-card text-center py-5">
+            <i class="fas fa-envelope-open" style="font-size: 4rem; color: #ddd; margin-bottom: 1rem;"></i>
+            <h5>No inquiries sent</h5>
+            <p style="color: #666;">Browse properties and send inquiries to agents</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleFavorite(propertyId, element) {
+    fetch(`/user/favorite/${propertyId}`, {method: 'POST'})
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}
