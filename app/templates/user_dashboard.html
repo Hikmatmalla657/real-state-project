@@ -40,7 +40,7 @@
                                 <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800" alt="Property">
                             {% endif %}
                             <div class="property-badge">{{ property.property_type }}</div>
-                            <div class="property-favorite active" onclick="toggleFavorite({{ property.id }}, this)">
+                            <div class="property-favorite active" onclick="toggleFavorite('{{ property.id }}', this)"></div>
                                 <i class="fas fa-heart"></i>
                             </div>
                         </div>
