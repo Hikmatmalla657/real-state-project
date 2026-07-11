@@ -24,11 +24,11 @@ def add_sample_data():
         agent = User(
             username='nepal_agent',
             email='agent@estatehub.np',
-            full_name='Ram Sharma',
+            full_name='Hari Sharma',
             phone='+977-9841234567',
             role='agent'
         )
-        agent.set_password('password123')
+        agent.set_password('password456')
         db.session.add(agent)
         db.session.commit()
         print("✓ Created sample agent: nepal_agent")
