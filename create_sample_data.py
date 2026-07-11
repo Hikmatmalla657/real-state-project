@@ -66,11 +66,11 @@ def create_sample_data():
         # Sample properties for agent1
         property1 = Property(
             agent_id=agent1.id,
-            title='Luxury Villa in Kathmandu',
-            description='Beautiful 4-bedroom villa with modern amenities, spacious garden, and mountain views. Located in a peaceful neighborhood with easy access to schools and shopping centers.',
+            title='Luxury Villa with Garden in Bakhundole',
+            description='Modern luxury villa with 4 bedrooms, private garden, parking space, and beautiful mountain views. Located in a peaceful residential area.',
             property_type='Villa',
-            address='Bakhundole Road',
-            city='Kathmandu',
+            address='Bakhundole',
+            city='Lalitpur',
             state='Bagmati',
             zipcode='44600',
             price=450000,
@@ -78,12 +78,13 @@ def create_sample_data():
             bathrooms=3,
             area=3500,
             status='available'
-        )
+)
+        
         
         property2 = Property(
             agent_id=agent1.id,
-            title='Modern Apartment in Lalitpur',
-            description='Contemporary 2-bedroom apartment in a premium complex. Features include gym, parking, and 24/7 security. Perfect for young professionals.',
+            title='Modern Apartment in Jawalakhel',
+            description='2-bedroom apartment with lift, parking, gym, and 24/7 security. Perfect for city living with easy access to shops and offices.',
             property_type='Apartment',
             address='Jawalakhel',
             city='Lalitpur',
@@ -94,14 +95,14 @@ def create_sample_data():
             bathrooms=2,
             area=1200,
             status='available'
-        )
+)
         
         property3 = Property(
             agent_id=agent1.id,
-            title='Cozy House in Bhaktapur',
-            description='Traditional Newari-style house with modern renovations. 3 bedrooms, large courtyard, and heritage architecture. Great for families.',
+            title='Family House in Bhaktapur',
+            description='Comfortable 3-bedroom house with courtyard and traditional design. Suitable for families looking for a peaceful environment.',
             property_type='House',
-            address='Durbar Square Area',
+            address='Bhaktapur Durbar Area',
             city='Bhaktapur',
             state='Bagmati',
             zipcode='44800',
@@ -110,15 +111,15 @@ def create_sample_data():
             bathrooms=2,
             area=2000,
             status='available'
-        )
+)
         
         # Sample properties for agent2
         property4 = Property(
             agent_id=agent2.id,
-            title='Premium Condo in Pokhara',
-            description='Stunning lakeside condo with panoramic views of Phewa Lake and the Himalayas. Fully furnished with modern appliances.',
+            title='Premium Condo with Lake View',
+            description='Luxury condo near Phewa Lake with modern interior, balcony, and stunning Himalayan views.',
             property_type='Condo',
-            address='Lakeside Road',
+            address='Lakeside',
             city='Pokhara',
             state='Gandaki',
             zipcode='33700',
@@ -127,12 +128,13 @@ def create_sample_data():
             bathrooms=2,
             area=1800,
             status='available'
-        )
+)
+        
         
         property5 = Property(
             agent_id=agent2.id,
-            title='Commercial Space in Kathmandu',
-            description='Prime commercial property in the heart of Kathmandu. Ideal for retail, office, or restaurant. High foot traffic area.',
+            title='Commercial Space in New Road',
+            description='Prime commercial space suitable for shops, offices, or restaurants. Located in a high-traffic business area.',
             property_type='Commercial',
             address='New Road',
             city='Kathmandu',
@@ -141,12 +143,13 @@ def create_sample_data():
             price=600000,
             area=2500,
             status='available'
-        )
+)
+        
         
         property6 = Property(
             agent_id=agent2.id,
-            title='Spacious Family Home in Bhaktapur',
-            description='Large 5-bedroom house perfect for big families. Features include garden, garage, and rooftop terrace with mountain views.',
+            title='Spacious Family Home in Thimi',
+            description='Large 5-bedroom house with garden, parking, and rooftop terrace. Ideal for big families.',
             property_type='House',
             address='Madhyapur Thimi',
             city='Bhaktapur',
@@ -157,12 +160,11 @@ def create_sample_data():
             bathrooms=4,
             area=4000,
             status='available'
-        )
-        
+)
         property7 = Property(
             agent_id=agent1.id,
-            title='Budget-Friendly Apartment',
-            description='Affordable 1-bedroom apartment for first-time buyers. Well-maintained building with basic amenities.',
+            title='Affordable Apartment in Baneshwor',
+            description='1-bedroom budget apartment with basic facilities. Great for students or first-time buyers.',
             property_type='Apartment',
             address='Baneshwor',
             city='Kathmandu',
@@ -173,12 +175,12 @@ def create_sample_data():
             bathrooms=1,
             area=650,
             status='available'
-        )
+)
         
         property8 = Property(
             agent_id=agent2.id,
-            title='Land Plot in Chitwan',
-            description='Residential land plot in a developing area. Perfect for building your dream home. Clear title, ready to build.',
+            title='Residential Land in Chitwan',
+            description='5000 sq ft land suitable for building a house. Peaceful area with road access and clear ownership.',
             property_type='Land',
             address='Bharatpur',
             city='Chitwan',
@@ -187,7 +189,7 @@ def create_sample_data():
             price=75000,
             area=5000,
             status='available'
-        )
+)
         
         # Add properties to database
         db.session.add_all([property1, property2, property3, property4, property5, property6, property7, property8])
