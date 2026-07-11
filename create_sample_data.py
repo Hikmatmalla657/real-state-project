@@ -22,7 +22,7 @@ def create_sample_data():
         # Create sample users (buyers)
         user1 = User(
             username='john_doe',
-            email='john@example.com',
+            email='john1@example.com',
             full_name='John Doe',
             phone='+977 123-456-7890',
             role='user'
@@ -30,8 +30,8 @@ def create_sample_data():
         user1.set_password('password123')
         
         user2 = User(
-            username='jane_smith',
-            email='jane@example.com',
+            username='Hikmat_smith',
+            email='jane2@example.com',
             full_name='Jane Smith',
             phone='+977 987-654-3210',
             role='user'
@@ -41,7 +41,7 @@ def create_sample_data():
         # Create sample agents
         agent1 = User(
             username='mike_agent',
-            email='mike@estatehub.com',
+            email='mike@estatehub3.com',
             full_name='Mike Johnson',
             phone='+977 555-1234',
             role='agent'

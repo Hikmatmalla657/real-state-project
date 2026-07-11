@@ -136,7 +136,7 @@ def add_sample_data():
                 'price': 80000000,
                 'currency': 'NPR',
                 'bedrooms': 15,
-                'bathrooms': 15,
+                'bathrooms': 10,
                 'area': 8000,
                 'status': 'available'
             },
