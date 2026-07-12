@@ -81,7 +81,7 @@
                         {% endif %}
                         <div class="property-badge">{{ property.property_type }}</div>
                         {% if current_user.is_authenticated and current_user.role == 'user' %}
-                        <div class="property-favorite {% if property in current_user.favorite_properties.all() %}active{% endif %}" onclick="toggleFavorite({{ property.id }}, this)">
+                        <div class="property-favorite {% if property in current_user.favorite_properties.all() %}active{% endif %}" onclick="toggleFavorite({{ property.id }} this)"
                             <i class="fas fa-heart"></i>
                         </div>
                         {% endif %}
