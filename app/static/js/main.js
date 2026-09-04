@@ -20,6 +20,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Navbar scroll effect
 window.addEventListener('scroll', function() {
     const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
     if (window.scrollY > 50) {
         navbar.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
     } else {
@@ -79,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Animate elements on scroll
 const animateOnScroll = () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const elements = document.querySelectorAll('.property-card, .dashboard-card');
     
     const observer = new IntersectionObserver((entries) => {
@@ -103,16 +105,6 @@ const animateOnScroll = () => {
 
 // Initialize animations when DOM is ready
 document.addEventListener('DOMContentLoaded', animateOnScroll);
-
-// Price formatter
-function formatPrice(price) {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(price);
-}
 
 // Debounce function for search inputs
 function debounce(func, wait) {

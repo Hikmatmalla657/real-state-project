@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}{{ property.title }} - EstateHub{% endblock %}
+{% block meta_description %}
+{{ property.description[:155] }}
+{% endblock %}
 
 {% block content %}
 <div class="container my-5">
@@ -29,7 +32,7 @@
                                 {{ property.address }}, {{ property.city }}, {{ property.state or 'Nepal' }}
                             </p>
                         </div>
-                        <div class="property-price">${{ "{:,.0f}".format(property.price) }}</div>
+                        <div class="property-price">{{ property.price|format_price(property.currency) }}</div>
                     </div>
                     
                     <!-- Property Features Grid -->
@@ -77,7 +80,7 @@
                                      alt="{{ sim_prop.title }}" style="width: 100%; height: 150px; object-fit: cover;">
                                 <div class="similar-property-content">
                                     <h6 class="mb-2">{{ sim_prop.title }}</h6>
-                                    <div class="property-price mb-2">${{ "{:,.0f}".format(sim_prop.price) }}</div>
+                                    <div class="property-price mb-2">{{ sim_prop.price|format_price(sim_prop.currency) }}</div>
                                     <a href="{{ url_for('main.property_detail', property_id=sim_prop.id) }}" 
                                        class="btn btn-primary-custom w-100" style="font-size: 0.9rem; padding: 0.5rem;">View Details</a>
                                 </div>
@@ -122,7 +125,7 @@
             {% if current_user.is_authenticated and current_user.role == 'user' %}
             <div class="inquiry-card">
                 <h5 class="mb-3">Interested? Send Inquiry</h5>
-                <form method="POST" action="{{ url_for('main.submit_inquiry', property_id=property.id) }}">
+                <form method="POST" action="{{ url_for('main.submit_inquiry', property_id=property.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label class="form-label">Your Message</label>
                         <textarea name="message" rows="4" class="form-control" required 

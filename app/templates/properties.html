@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}Properties - EstateHub{% endblock %}
+{% block meta_description %}
+Browse houses, apartments, villas, land and commercial properties for sale and rent in Nepal.
+{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -9,12 +12,14 @@
     
     <!-- Filter Section -->
     <div class="search-bar mb-5">
-        <form method="GET" action="{{ url_for('main.properties') }}">
-            <div class="row g-3">
+        <form method="GET" action="{{ url_for('main.properties') }}" class="property-filter-form">
+            <div class="row g-3 align-items-end">
                 <div class="col-lg-3 col-md-6">
+                    <label class="filter-label">Search</label>
                     <input type="text" name="search" class="form-control" placeholder="Search properties..." value="{{ request.args.get('search', '') }}">
                 </div>
                 <div class="col-lg-2 col-md-6">
+                    <label class="filter-label">Type</label>
                     <select name="type" class="form-select">
                         <option value="">All Types</option>
                         {% for type in property_types %}
@@ -23,6 +28,7 @@
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-6">
+                    <label class="filter-label">City</label>
                     <select name="city" class="form-select">
                         <option value="">All Cities</option>
                         {% for city in cities %}
@@ -31,9 +37,11 @@
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-6">
+                    <label class="filter-label">Min Price</label>
                     <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="{{ request.args.get('min_price', '') }}">
                 </div>
                 <div class="col-lg-2 col-md-6">
+                    <label class="filter-label">Max Price</label>
                     <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="{{ request.args.get('max_price', '') }}">
                 </div>
                 <div class="col-lg-1 col-md-6">
@@ -46,7 +54,7 @@
     </div>
     
     <!-- Properties Grid -->
-    <div class="row g-4">
+    <div class="property-grid row g-4">
         {% if properties %}
             {% for property in properties %}
             <div class="col-lg-4 col-md-6">
@@ -81,9 +89,9 @@
                         {% endif %}
                         <div class="property-badge">{{ property.property_type }}</div>
                         {% if current_user.is_authenticated and current_user.role == 'user' %}
-                        <div class="property-favorite {% if property in current_user.favorite_properties.all() %}active{% endif %}" onclick="toggleFavorite({{ property.id }} this)"
+                        <button type="button" class="property-favorite {% if property in current_user.favorite_properties.all() %}active{% endif %}" onclick="toggleFavorite({{ property.id }}, this)">
                             <i class="fas fa-heart"></i>
-                        </div>
+                        </button>
                         {% endif %}
                     </div>
                     <div class="property-body">
@@ -91,7 +99,7 @@
                             {% if property.currency == 'NPR' %}
                                 रू {{ "{:,.0f}".format(property.price) }}
                             {% else %}
-                                ${{ "{:,.0f}".format(property.price) }}
+                                {{ property.price|format_price(property.currency) }}
                             {% endif %}
                         </div>
                         <h3 class="property-title">{{ property.title }}</h3>
@@ -143,6 +151,7 @@
             Showing <strong>{{ properties|length }}</strong> propert{{ 'y' if properties|length == 1 else 'ies' }}
         </p>
     </div>
+    {% if pagination.pages > 1 %}<nav aria-label="Property pages"><ul class="pagination justify-content-center">{% for page in pagination.iter_pages() %}{% if page %}<li class="page-item {% if page == pagination.page %}active{% endif %}"><a class="page-link" href="{{ url_for('main.properties', page=page, search=request.args.get('search',''), type=request.args.get('type',''), city=request.args.get('city',''), min_price=request.args.get('min_price',''), max_price=request.args.get('max_price',''), bedrooms=request.args.get('bedrooms','')) }}">{{ page }}</a></li>{% else %}<li class="page-item disabled"><span class="page-link">…</span></li>{% endif %}{% endfor %}</ul></nav>{% endif %}
     {% endif %}
 </div>
 {% endblock %}

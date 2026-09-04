@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-
+{% block meta_description %}
+Find your dream house, apartment, land and other properties for sale and rent in Nepal with EstateHub.
+{% endblock %}
 {% block title %}EstateHub - Find Your Dream Property{% endblock %}
 
 {% block content %}
@@ -116,7 +118,7 @@
                             {% if property.currency == 'NPR' %}
                                 रू {{ "{:,.0f}".format(property.price) }}
                             {% else %}
-                                ${{ "{:,.0f}".format(property.price) }}
+                                {{ property.price|format_price(property.currency) }}
                             {% endif %}
                         </div>
                         <h3 class="property-title">{{ property.title }}</h3>

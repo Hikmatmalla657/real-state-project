@@ -132,13 +132,13 @@
 {% block extra_js %}
 <script>
 function toggleFavorite(propertyId, element) {
-    fetch(`/user/favorite/${propertyId}`, {method: 'POST'})
-    .then(response => response.json())
+    fetch(`/user/favorite/${propertyId}`, {method: 'POST', headers: {'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content}})
+    .then(async response => { const data = await response.json().catch(() => ({message: 'Request failed.'})); if (!response.ok) throw new Error(data.message); return data; })
     .then(data => {
         if (data.success) {
             location.reload();
         }
-    });
+    }).catch(error => alert(error.message));
 }
 </script>
 {% endblock %}

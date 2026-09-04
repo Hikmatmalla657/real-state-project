@@ -9,7 +9,7 @@
             <div class="form-card">
                 <h2 class="gradient-text mb-4">Edit Property</h2>
                 
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="form-label">Property Title *</label>
@@ -24,19 +24,15 @@
                         <div class="col-md-6">
                             <label class="form-label">Property Type *</label>
                             <select name="property_type" class="form-select" required>
-                                <option value="House" {% if property.property_type == 'House' %}selected{% endif %}>House</option>
-                                <option value="Apartment" {% if property.property_type == 'Apartment' %}selected{% endif %}>Apartment</option>
-                                <option value="Villa" {% if property.property_type == 'Villa' %}selected{% endif %}>Villa</option>
-                                <option value="Condo" {% if property.property_type == 'Condo' %}selected{% endif %}>Condo</option>
-                                <option value="Land" {% if property.property_type == 'Land' %}selected{% endif %}>Land</option>
-                                <option value="Commercial" {% if property.property_type == 'Commercial' %}selected{% endif %}>Commercial</option>
+                                {% for type in property_types %}<option value="{{ type }}" {% if property.property_type == type %}selected{% endif %}>{{ type }}</option>{% endfor %}
                             </select>
                         </div>
                         
                         <div class="col-md-6">
-                            <label class="form-label">Price (USD) *</label>
+                            <label class="form-label">Price *</label>
                             <input type="number" name="price" class="form-control" step="0.01" value="{{ property.price }}" required>
                         </div>
+                        <div class="col-md-6"><label class="form-label">Currency *</label><select name="currency" class="form-select">{% for currency in currencies %}<option value="{{ currency }}" {% if property.currency == currency %}selected{% endif %}>{{ currency }}</option>{% endfor %}</select></div>
                         
                         <div class="col-12">
                             <label class="form-label">Street Address *</label>
@@ -45,7 +41,7 @@
                         
                         <div class="col-md-4">
                             <label class="form-label">City *</label>
-                            <input type="text" name="city" class="form-control" value="{{ property.city }}" required>
+                            <select name="city" class="form-select" required>{% for city in cities %}<option value="{{ city }}" {% if property.city == city %}selected{% endif %}>{{ city }}</option>{% endfor %}</select>
                         </div>
                         
                         <div class="col-md-4">
@@ -87,7 +83,7 @@
                             {% if property.image_filename %}
                             <div class="mb-2">
                                 <img src="{{ url_for('static', filename='uploads/' + property.image_filename) }}" 
-                                     style="max-width: 300px; border-radius: var(--radius-md);">
+                                     alt="Current image for {{ property.title }}" style="max-width: 300px; border-radius: 10px;">
                             </div>
                             {% endif %}
                             <input type="file" name="image" class="form-control" accept="image/*">
