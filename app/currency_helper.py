@@ -43,7 +43,7 @@ def convert_currency(amount, from_currency='NPR', to_currency='USD'):
     
     return round(converted_amount, 2)
 
-def format_price(amount, currency='NPR', show_symbol=True):
+def format_price(amount, currency='NPR', show_symbol=True, period=None):
     """
     Format price with proper currency symbol and formatting
     
@@ -67,11 +67,12 @@ def format_price(amount, currency='NPR', show_symbol=True):
     
     if show_symbol:
         if currency == 'NPR':
-            return f"{symbol} {formatted}"
+            result = f"{symbol} {formatted}"
         else:
-            return f"{symbol}{formatted}"
+            result = f"{symbol}{formatted}"
+        return f"{result}/{period}" if period else result
     
-    return formatted
+    return f"{formatted}/{period}" if period else formatted
 
 def format_indian_number(number):
     """
@@ -156,4 +157,12 @@ NEPAL_PROPERTY_TYPES = [
     'Warehouse',
     'Hotel',
     'Resort',
+]
+
+KATHMANDU_VALLEY_AREAS = [
+    "Baneshwor", "Boudha", "Budhanilkantha", "Chabahil", "Dillibazar", "Kalanki",
+    "Kalimati", "Kapan", "Koteshwor", "Maharajgunj", "New Baneshwor", "Putalisadak",
+    "Samakhusi", "Sinamangal", "Sukedhara", "Thamel", "Tokha", "Balaju", "Patan",
+    "Jawalakhel", "Kupondole", "Satdobato", "Lagankhel", "Bhaisepati", "Maitidevi",
+    "Gaushala", "Dhumbarahi", "Naxal", "Lazimpat", "Swayambhu", "Thankot",
 ]

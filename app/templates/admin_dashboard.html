@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - EstateHub{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="section-title">Admin Dashboard</h2>
+    <p class="section-subtitle">Platform-wide activity and engagement</p>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6"><div class="stat-card stat-card-1"><div class="stat-card-icon"><i class="fas fa-users"></i></div><div class="stat-card-number">{{ stats.users }}</div><div class="stat-card-label">Users</div></div></div>
+        <div class="col-lg-3 col-md-6"><div class="stat-card stat-card-2"><div class="stat-card-icon"><i class="fas fa-building"></i></div><div class="stat-card-number">{{ stats.agents }}</div><div class="stat-card-label">Agents</div></div></div>
+        <div class="col-lg-3 col-md-6"><div class="stat-card stat-card-3"><div class="stat-card-icon"><i class="fas fa-home"></i></div><div class="stat-card-number">{{ stats.properties }}</div><div class="stat-card-label">Properties</div></div></div>
+        <div class="col-lg-3 col-md-6"><div class="stat-card stat-card-4"><div class="stat-card-icon"><i class="fas fa-envelope"></i></div><div class="stat-card-number">{{ stats.inquiries }}</div><div class="stat-card-label">Inquiries</div></div></div>
+    </div>
+
+    <div class="dashboard-card mb-5">
+        <h4 class="mb-3"><i class="fas fa-chart-pie me-2"></i>Properties by Status</h4>
+        {% if status_counts %}<div class="table-responsive"><table class="table mb-0"><thead><tr><th>Status</th><th>Properties</th></tr></thead><tbody>{% for status, count in status_counts.items() %}<tr><td>{{ (status or 'Unspecified').title() }}</td><td>{{ count }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="text-muted mb-0">No properties have been listed yet.</p>{% endif %}
+    </div>
+
+    <div class="dashboard-card">
+        <h4 class="mb-3"><i class="fas fa-heart text-danger me-2"></i>Most Liked Properties</h4>
+        {% if top_liked_properties %}<div class="table-responsive"><table class="table mb-0"><thead><tr><th>Property</th><th>Agent</th><th>Status</th><th>Likes</th></tr></thead><tbody>{% for property, like_count in top_liked_properties %}<tr><td><a href="{{ url_for('main.property_detail', property_id=property.id) }}">{{ property.title }}</a><br><small class="text-muted">{{ property.city }}</small></td><td>{{ property.agent.full_name or property.agent.username }}</td><td>{{ property.status.title() }}</td><td><i class="fas fa-heart text-danger"></i> {{ like_count }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="text-muted mb-0">No properties have been listed yet.</p>{% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -5,6 +5,7 @@ from flask import Flask, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFError, CSRFProtect
 
@@ -12,6 +13,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 csrf = CSRFProtect()
 limiter = Limiter(key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
+migrate = Migrate()
 
 def create_app():
     load_dotenv()
@@ -19,7 +21,7 @@ def create_app():
     app.config.update(SECRET_KEY=os.environ.get("SECRET_KEY"), SQLALCHEMY_DATABASE_URI=os.environ.get("DATABASE_URL", "sqlite:///realestate.db"), SQLALCHEMY_TRACK_MODIFICATIONS=False, UPLOAD_FOLDER=os.environ.get("UPLOAD_FOLDER", os.path.join(app.root_path, "static", "uploads")), MAX_CONTENT_LENGTH=int(os.environ.get("MAX_UPLOAD_BYTES", 16 * 1024 * 1024)))
     if not app.config["SECRET_KEY"]:
         raise RuntimeError("SECRET_KEY must be set in the environment before EstateHub can start.")
-    db.init_app(app); login_manager.init_app(app); csrf.init_app(app); limiter.init_app(app)
+    db.init_app(app); migrate.init_app(app, db); login_manager.init_app(app); csrf.init_app(app); limiter.init_app(app)
     login_manager.login_view = "main.login"; login_manager.login_message = "Please log in to access this page."; login_manager.login_message_category = "info"
     @app.errorhandler(CSRFError)
     def handle_csrf_error(error):
@@ -34,5 +36,7 @@ def create_app():
     app.register_blueprint(main)
     app.jinja_env.filters["format_price"] = format_price; app.jinja_env.filters["convert_price"] = convert_currency; app.jinja_env.globals["property_image"] = get_property_image
     with app.app_context():
-        db.create_all(); os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+        if os.environ.get("AUTO_CREATE_SCHEMA", "").lower() in {"1", "true", "yes"}:
+            db.create_all()
+        os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
     return app
